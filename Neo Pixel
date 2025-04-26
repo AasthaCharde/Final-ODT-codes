@@ -1,0 +1,33 @@
+import machine
+import neopixel
+import time
+
+NUM_LEDS = 16
+PIN = 5  # GPIO 5
+DELAY = 0.1
+
+np = neopixel.NeoPixel(machine.Pin(PIN), NUM_LEDS)
+
+def wheel(pos):
+    if pos < 0 or pos > 255:
+        return (0, 0, 0)
+    if pos < 85:
+        return (255 - pos * 3, pos * 3, 0)
+    elif pos < 170:
+        pos -= 85
+        return (0, 255 - pos * 3, pos * 3)
+else:
+ pos -= 170
+ return (pos * 3, 0, 255 - pos * 3)
+
+def rotating_light():
+ pos = 0
+ color_index = 0
+ while True:
+ np.fill((0, 0, 0)) # turn off all LEDs
+ np[pos] = wheel(color_index % 256)
+ np.write()
+ pos = (pos + 1) % NUM_LEDS
+ color_index += 10
+ time.sleep(DELAY)
+rotating_light()
